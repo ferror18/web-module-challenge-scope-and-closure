@@ -26,11 +26,13 @@ function processFirstItem(stringList, callback) {
 /* Task 1: `counterMaker`
  * Study the code for counter1 and counter2. Answer the questions below.
  * 
- * 1. What is the difference between counter1 and counter2?
+ * 1. What is the difference between counter1 and counter2? variable count is private in counter 1 vs global in counter 2.
  * 
- * 2. Which of the two uses a closure? How can you tell?
+ * 2. Which of the two uses a closure? How can you tell? Counter1. Because it return a function.
  * 
- * 3. In what scenario would the counter1 code be preferable? In what scenario would counter2 be better? 
+ * 3. In what scenario would the counter1 code be preferable? In what scenario would counter2 be better? S
+ *  Contuer 1 - In a scenario when you need the variable conter to not accesible for other parts of the code.
+ * Counter 2 - In a scenario when you need to access variable count with difrent code.
  *
 */
 
@@ -58,10 +60,12 @@ Write a function called `inning` that generates a random number of points that a
 
 function inning(/*Code Here*/){
 
-    /*Code Here*/
+  const min = Math.ceil(0);
+  const max = Math.floor(3);
+  return Math.floor(Math.random() * (max - min)) + min
 
 }
-
+// console.log(inning());
 /* Task 3: finalScore()
 
 Write a higher order function called `finalScore` that accepts the callback function `inning` (from above) and a number of innings and and returns the final score of the game in the form of an object.
@@ -76,12 +80,18 @@ finalScore(inning, 9) might return:
 
 */ 
 
-function finalScore(/*code Here*/){
-
-  /*Code Here*/
-
+function finalScore(cb, frequency){
+  const finalScore = {"Home":0, "Away":0}
+  for(let i = 0; i < frequency; i++){
+    if(i%2 === 0){
+      finalScore.Home += cb();
+    }else{
+      finalScore.Away += cb();
+    }
+  }
+  return finalScore;
 }
-
+// console.log(finalScore(inning, 10));
 /* Task 4: 
 
 Create a function called `scoreboard` that accepts the following parameters: 
@@ -103,9 +113,34 @@ and returns the score at each pont in the game, like so:
 9th inning: awayTeam - homeTeam
 
 Final Score: awayTeam - homeTeam */
-
-function scoreboard(/* CODE HERE */) {
-  /* CODE HERE */
+function ordinal_suffix_of(i) {
+  var j = i % 10,
+      k = i % 100;
+  if (j == 1 && k != 11) {
+      return i + "st";
+  }
+  if (j == 2 && k != 12) {
+      return i + "nd";
+  }
+  if (j == 3 && k != 13) {
+      return i + "rd";
+  }
+  return i + "th";
 }
 
+function scoreboard(cb, frequency) {
+  const finalScore = {"Home":0, "Away":0}
+  for(let i = 0; i < frequency; i++){
+    let OSF = ordinal_suffix_of(i+1);
+    if(i%2 === 0){
+      finalScore.Home += cb();
+      console.log(`${OSF} inning: ${finalScore.Away} - ${finalScore.Home}` )
+    }else{
+      finalScore.Away += cb();
+      console.log(`${OSF} inning: ${finalScore.Away} - ${finalScore.Home}` )
+    }
+  }
+  console.log(`\n\nFinal Score: ${finalScore.Away} - ${finalScore.Home}`)
+}
+scoreboard(inning, 10);
 
